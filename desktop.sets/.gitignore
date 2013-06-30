@@ -1,0 +1,4 @@
+*
+!.bem/
+!.bem/**
+!.gitignore
