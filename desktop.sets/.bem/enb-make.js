@@ -10,12 +10,74 @@ module.exports = function(config) {
 
 
         /* Copy examples into set */
-
         var examplesDir = [block, block + '.examples'].join('/'),
             examplesSourceDir = [sourceDir, examplesDir].join('/');
 
         fs.mkdirsSync(examplesDir);
-        fs.copy(examplesSourceDir, examplesDir); // THIS IS ASYNC!!
+
+        var examplesDirCopied = vow.promise();
+        examplesDirCopied.then(function(){
+
+            config.node(examplesDir, function(nodeConfig) {
+
+                fs.readdirSync(config.resolvePath(examplesDir)).forEach(function(exampleFile){
+
+                    if (exampleFile.indexOf('.') === 0 || exampleFile.indexOf('.bemjson.js') === -1) return;
+
+                    var targetName = exampleFile.replace('.bemjson.js', ''),
+                        ownLevel = examplesDir + '/' + targetName + '.blocks';
+
+                    nodeConfig.addTechs([
+                        [
+                            require('enb/techs/levels'),
+                            {
+                                levels: getLevels(config, ownLevel),
+                                target: targetName + '.levels'
+                            }
+                        ],
+                        [ require('enb/techs/file-provider'), { target: targetName + '.bemjson.js' } ],
+                        [ require('enb/techs/bemdecl-from-bemjson'), {
+                            sourceTarget: targetName + '.bemjson.js',
+                            destTarget: targetName + '.bemdecl.js'
+                        } ],
+                        [ require('enb/techs/deps-old'), {
+                            depsTarget: targetName + '.deps.js',
+                            bemdeclTarget: targetName + '.bemdecl.js',
+                            levelsTarget: targetName + '.levels'
+                        } ],
+                        [ require('enb/techs/files'), {
+                            filesTarget: targetName + '.files',
+                            dirsTarget: targetName + '.dirs',
+                            depsTarget: targetName + '.deps.js',
+                            levelsTarget: targetName + '.levels'
+                        } ],
+                        [ require('enb/techs/js'), {
+                            filesTarget: targetName + '.files',
+                            target: targetName + '.js'
+                        } ],
+                        [ require('enb/techs/css'), {
+                            filesTarget: targetName + '.files',
+                            target: targetName + '.css'
+                        } ],
+                        [   require('bh/techs/bh-server'), {
+                            filesTarget: targetName + '.files',
+                            target: targetName + '.bh.js'
+                        } ]
+                    ]);
+                    nodeConfig.addTargets([
+                        targetName + '.css',
+                        targetName + '.js',
+                        targetName + '.bh.js'
+                    ]);
+
+                });
+
+            });
+
+        })
+        fs.copy(examplesSourceDir, examplesDir, function() {
+            examplesDirCopied.fulfill('completed');
+        });
 
     });
 };
