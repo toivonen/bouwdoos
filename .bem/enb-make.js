@@ -2,25 +2,27 @@ var fs = require('fs-extra'),
     vow = require('vow');
 
 module.exports = function(config) {
-    var sourceDir = '../desktop.blocks';
+    var sourceDir = 'desktop.blocks',
+        setDir = 'desktop.sets';
     fs.readdirSync(config.resolvePath(sourceDir)).forEach(function(block) {
         if (block.indexOf('.') === 0) return;
 
-        fs.existsSync(block) && fs.removeSync(block);
+        fs.existsSync(setDir + '/' + block) && fs.removeSync(setDir + '/' + block);
 
 
         /* Copy examples into set */
         var examplesDir = [block, block + '.examples'].join('/'),
-            examplesSourceDir = [sourceDir, examplesDir].join('/');
+            examplesSourceDir = [sourceDir, examplesDir].join('/'),
+            examplesDestDir = [setDir, examplesDir].join('/');
 
-        fs.mkdirsSync(examplesDir);
+        fs.mkdirsSync(examplesDestDir);
 
         var examplesDirCopied = vow.promise();
         examplesDirCopied.then(function(){
 
-            config.node(examplesDir, function(nodeConfig) {
+            config.node(examplesDestDir, function(nodeConfig) {
 
-                fs.readdirSync(config.resolvePath(examplesDir)).forEach(function(exampleFile){
+                fs.readdirSync(config.resolvePath(examplesDestDir)).forEach(function(exampleFile){
 
                     if (exampleFile.indexOf('.') === 0 || exampleFile.indexOf('.bemjson.js') === -1) return;
 
@@ -80,7 +82,7 @@ module.exports = function(config) {
             });
 
         })
-        fs.copy(examplesSourceDir, examplesDir, function() {
+        fs.copy(examplesSourceDir, examplesDestDir, function() {
             examplesDirCopied.fulfill('completed');
         });
 
@@ -89,7 +91,7 @@ module.exports = function(config) {
 
 function getLevels(config, ownLevel) {
     var levels = [
-        { path: '../desktop.blocks', check: false }
+        { path: 'desktop.blocks', check: false }
     ];
     if (fs.existsSync(ownLevel)) {
         levels.push({ path: ownLevel, check: false });
