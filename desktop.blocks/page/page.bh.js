@@ -27,7 +27,7 @@ module.exports = function(bh) {
                                 } : '',
                                 json.meta,
                                 {
-                                    block: 'i-ua'
+                                    block: 'ua'
                                 }
                             ],
                             json.head
@@ -55,7 +55,7 @@ module.exports = function(bh) {
     bh.match('page__html', function(ctx) {
         ctx.tag('html');
         ctx.bem(false);
-        ctx.cls('i-ua_js_no i-ua_css_standard');
+        ctx.cls('ua_js_no ua_css_standard');
     });
 
     bh.match('page__head', function(ctx) {
