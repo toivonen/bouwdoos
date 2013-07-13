@@ -9,7 +9,6 @@ module.exports = function(config) {
 
         fs.existsSync(setDir + '/' + block) && fs.removeSync(setDir + '/' + block);
 
-
         /* Copy examples into set */
         var examplesDir = [block, block + '.examples'].join('/'),
             examplesSourceDir = [sourceDir, examplesDir].join('/'),
