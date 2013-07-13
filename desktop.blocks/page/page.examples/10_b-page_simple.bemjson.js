@@ -1,6 +1,6 @@
 ([
     {
-        block: 'b-page',
+        block: 'page',
         mods: { exp: 'ololo' },
         js: { a: 'b' },
         title: 'заголовок',
