@@ -5,7 +5,7 @@ module.exports = function(config) {
     var sourceDir = 'desktop.blocks',
         setDir = 'desktop.sets';
     fs.readdirSync(config.resolvePath(sourceDir)).forEach(function(block) {
-        if (block.indexOf('.') === 0) return;
+        if (block.indexOf('.') === 0 || !fs.existsSync(sourceDir + '/' + block + '/')) return;
 
         fs.existsSync(setDir + '/' + block) && fs.removeSync(setDir + '/' + block);
 

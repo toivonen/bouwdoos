@@ -1,1 +1,0 @@
-Desctop examples directory
