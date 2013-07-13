@@ -62,12 +62,17 @@ module.exports = function(config) {
                         [   require('bh/techs/bh-server'), {
                             filesTarget: targetName + '.files',
                             target: targetName + '.bh.js'
+                        } ],
+                        [ require("enb/techs/html-from-bemjson"), {
+                            bemhtmlTarget: targetName + '.bh.js',
+                            bemjsonTarget: targetName + '.bemjson.js',
+                            destTarget: targetName + '.html'
                         } ]
                     ]);
                     nodeConfig.addTargets([
                         targetName + '.css',
                         targetName + '.js',
-                        targetName + '.bh.js'
+                        targetName + '.html'
                     ]);
 
                 });
