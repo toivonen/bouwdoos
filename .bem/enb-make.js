@@ -18,10 +18,12 @@ module.exports = function(config) {
 
         var examplesDirCopied = vow.promise();
         examplesDirCopied.then(function(){
+            console.log('then');
 
             config.node(examplesDestDir, function(nodeConfig) {
 
                 fs.readdirSync(config.resolvePath(examplesDestDir)).forEach(function(exampleFile){
+                    console.log(exampleFile);
 
                     if (exampleFile.indexOf('.') === 0 || exampleFile.indexOf('.bemjson.js') === -1) return;
 
@@ -80,8 +82,10 @@ module.exports = function(config) {
 
             });
 
-        })
-        fs.copy(examplesSourceDir, examplesDestDir, function() {
+        });
+        console.log('before copying', examplesSourceDir);
+        fs.existsSync(examplesSourceDir) && fs.copy(examplesSourceDir, examplesDestDir, function(err) {
+            console.log('after copying', examplesDestDir);
             examplesDirCopied.fulfill('completed');
         });
 
