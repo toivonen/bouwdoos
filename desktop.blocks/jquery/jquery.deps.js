@@ -1,6 +1,9 @@
 ({
     mustDeps: [
-        { block: 'page', elems: ['css', 'js'] }
+        {
+            block: 'page',
+            elems: ['css', 'js']
+        }
     ]
 })
 
