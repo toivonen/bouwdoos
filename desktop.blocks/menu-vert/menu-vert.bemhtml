@@ -1,0 +1,10 @@
+block menu-vert {
+
+    tag: 'ul'
+
+    elem item {
+        tag: 'li'
+    }
+
+}
+
